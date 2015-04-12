@@ -1,6 +1,6 @@
 # nd-browser
 
-[![spm version](http://spmjs.io/badge/nd-browser)](http://spmjs.io/package/nd-browser)
+[![spm version](http://spm.crossjs.com/badge/nd-browser)](http://spm.crossjs.com/package/nd-browser)
 
 > 浏览器检测
 

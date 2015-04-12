@@ -6,35 +6,36 @@
 
 'use strict';
 
-var Browser;
-Browser= (function () {
+module.exports = (function () {
   var ie = !!window.ActiveXObject;
+  var firefox = !!window.InstallTrigger;
   var webkit = !!window.devicePixelRatio;
+  var opera = !!window.opera;
+  var chrome = !!window.chrome;
+
   var browser = {
     ie: ie,
     ie6: ie && !window.XMLHttpRequest, // IE6没有Window.XMLHttpRequest，其后版本都有
     ie7: ie && navigator.appVersion.match(/7./i) === '7.',
     ie8: !!window.XDomainRequest,
     ie9: ie && +'\v1',
-    firefox: !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
-    opera: webkit && !!window.opera,
+    firefox: firefox,
+    opera: webkit && opera,
     safari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
-    chrome: webkit && !!window.chrome
+    chrome: webkit && chrome && !opera
   };
 
-  var is = (function () {
+  browser.is = (function () {
     if (browser.ie || browser.ie6 || browser.ie7 || browser.ie8 || browser.ie9) {
       return 'IE';
     }
     for (var b in browser) {
-      if (browser.hasOwnProperty(b) && browser[b] && b !== 'is') {
+      if (browser.hasOwnProperty(b) && browser[b]) {
         return b;
       }
     }
-    return 'IE'; // IE version > 9
+    return 'Unknown'; // IE version > 9
   })();
 
-  browser.is = is;
   return browser;
 })();
-module.exports = Browser;
