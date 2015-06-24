@@ -1,7 +1,6 @@
 /**
- * Description: index.js
- * Author: lzhengms <lzhengms@gmail.com>
- * Date: 2015-01-31 12:26:15
+ * @module Browser
+ * @author lzhengms <lzhengms@gmail.com>
  */
 
 'use strict';
@@ -10,7 +9,8 @@ module.exports = (function(navigator) {
 
   var userAgent = navigator.userAgent,
     temp,
-    match = userAgent.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+    match = userAgent.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [],
+    match2 = userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|IEMobile/);
 
   if (/trident/i.test(match[1])) {
     temp = /\brv[ :]+(\d+)/g.exec(userAgent) || [];
@@ -39,7 +39,8 @@ module.exports = (function(navigator) {
 
   return {
     browser: match[0] === 'MSIE' ? 'IE' : match[0],
-    version: match[1]
+    version: match[1],
+    mobile: match2 && match2[0]
   };
 
 })(navigator);
