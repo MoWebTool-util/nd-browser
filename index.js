@@ -1,40 +1,46 @@
 /**
- * Description: index.js
- * Author: lzhengms <lzhengms@gmail.com>
- * Date: 2015-01-31 12:26:15
+ * @module Browser
+ * @author lzhengms <lzhengms@gmail.com>
  */
 
 'use strict';
 
-var Browser;
-Browser= (function () {
-  var ie = !!window.ActiveXObject;
-  var webkit = !!window.devicePixelRatio;
-  var browser = {
-    ie: ie,
-    ie6: ie && !window.XMLHttpRequest, // IE6没有Window.XMLHttpRequest，其后版本都有
-    ie7: ie && navigator.appVersion.match(/7./i) === '7.',
-    ie8: !!window.XDomainRequest,
-    ie9: ie && +'\v1',
-    firefox: !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
-    opera: webkit && !!window.opera,
-    safari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
-    chrome: webkit && !!window.chrome
+module.exports = (function(navigator) {
+
+  var userAgent = navigator.userAgent,
+    temp,
+    match = userAgent.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [],
+    match2 = userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|IEMobile/);
+
+  if (/trident/i.test(match[1])) {
+    temp = /\brv[ :]+(\d+)/g.exec(userAgent) || [];
+    return {
+      browser: 'IE',
+      version: temp[1] || ''
+    };
+  }
+
+  if (match[1] === 'Chrome') {
+    temp = userAgent.match(/\bOPR\/(\d+)/);
+
+    if (temp !== null) {
+      return {
+        browser: 'Opera',
+        version: temp[1] || ''
+      };
+    }
+  }
+
+  match = match[2] ? [match[1], match[2]] : [navigator.appName, navigator.appVersion, '-?'];
+
+  if ((temp = userAgent.match(/version\/(\d+)/i)) !== null) {
+    match.splice(1, 1, temp[1]);
+  }
+
+  return {
+    browser: match[0] === 'MSIE' ? 'IE' : match[0],
+    version: match[1],
+    mobile: match2 && match2[0]
   };
 
-  var is = (function () {
-    if (browser.ie || browser.ie6 || browser.ie7 || browser.ie8 || browser.ie9) {
-      return 'IE';
-    }
-    for (var b in browser) {
-      if (browser.hasOwnProperty(b) && browser[b] && b !== 'is') {
-        return b;
-      }
-    }
-    return 'IE'; // IE version > 9
-  })();
-
-  browser.is = is;
-  return browser;
-})();
-module.exports = Browser;
+})(navigator);
