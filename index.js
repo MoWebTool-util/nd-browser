@@ -31,6 +31,18 @@ module.exports = (function(navigator) {
     }
   }
 
+  // 针对 Edge
+  if (match[1] === 'Chrome') {
+    temp = userAgent.match(/\bedge\/(\d+)/i);
+
+    if (temp !== null) {
+      return {
+        browser: 'IE',
+        version: temp[1] || ''
+      };
+    }
+  }
+
   match = match[2] ? [match[1], match[2]] : [navigator.appName, navigator.appVersion, '-?'];
 
   if ((temp = userAgent.match(/version\/(\d+)/i)) !== null) {
